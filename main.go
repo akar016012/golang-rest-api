@@ -70,13 +70,25 @@ func getTodo(c *gin.Context){
 	c.IndentedJSON(http.StatusOK, todo)
 }
 
+func toggleTodoStatus(c *gin.Context){
+	id := c.Param("id")
+	todo, err:= getTodoById(id)
 
+	if err !=nil {
+		c.IndentedJSON(http.StatusNotFound,gin.H{"message":"Todo not found"})
+	}
+
+	todo.Completed =!todo.Completed
+	c.IndentedJSON(http.StatusOK, todo)
+
+}
 
 /* create server and router */
 func main(){
 	router := gin.Default()
 	router.GET("/todos",getTodos)
 	router.GET("/todos/:id",getTodo)
+	router.PATCH("/todos/:id",toggleTodoStatus)
 	router.POST("/todos", addTodo)
 	router.Run("localhost:9090")
 }
