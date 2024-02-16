@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/akar016012/golang-rest-api/config"
-	"github.com/akar016012/golang-rest-api/routes"
-	"github.com/gin-gonic/gin"
+	"github.com/akar016012/golang-rest-api/src/models"
+	"github.com/akar016012/golang-rest-api/src/routes"
+	"github.com/akar016012/golang-rest-api/src/utils"
 )
 
 
-func main(){
-router := gin.New()
-config.Connect()
-routes.UserRoute(router)
-router.Run(":8080")
+func main() {
+utils.LoadEnv()
+models.OpenDatabaseConnection()
+models.AutoMigrateModels()
+router := routes.SetupRoutes()
+router.Run(":8080")	
 }
